@@ -16,8 +16,29 @@ const connect = function (req, res) {
 
 connect();
 
+//doctor data
 exports.getAllDoctor = function (callbackQuery) {
     connection.query("Select * from Doctor", function (err, results) {
+        if (!err) {
+            callbackQuery(results);
+        } else {
+            console.log(err);
+        }
+    })
+}
+
+exports.getDoctorPass = function (username, callbackQuery) {
+    connection.query("Select Password from DoctorAccounts where UserName = ?",[username], function (err, results) {
+        if (!err) {
+            callbackQuery(results);
+        } else {
+            console.log(err);
+        }
+    })
+}
+
+exports.getDocPassByID = function (id, callbackQuery) {
+    connection.query("Select Password from DoctorAccounts where IDDoctor = ?",[id], function (err, results) {
         if (!err) {
             callbackQuery(results);
         } else {
@@ -36,6 +57,16 @@ exports.getAllDoctorAcc = function (callbackQuery) {
     })
 }
 
+exports.checkDoctorAccount= function (username, callbackQuery){
+    connection.query("Select * from DoctorAccounts where UserName =?", [username], function (err, results){
+        if(!err){
+            callbackQuery(results);
+        }else{
+            console.log(err);
+        }
+    })
+}
+
 exports.addDoctor = function (name, sex, department, age, email, image, callbackQuery) {
     connection.query("Insert into Doctor set DoctorName =?, Sex = ?, Department =?, Age = ?, Email=?, Image=?", [name, sex, department, age, email, image], function (err, results) {
         if (!err) {
@@ -46,8 +77,29 @@ exports.addDoctor = function (name, sex, department, age, email, image, callback
     })
 }
 
-exports.createDoctorAcc = function (tk, mk, callbackQuery) {
-    connection.query("Insert into Doctoraccounts set IDDoctor =?, Password = ?", [tk, mk, callbackQuery], function (err, results) {
+exports.createDoctorAcc = function ( mk, username, callbackQuery) {
+    connection.query("Insert into Doctoraccounts set Password = ?, UserName = ?", [mk, username], function (err, results) {
+        if (!err) {
+            callbackQuery(results);
+        } else {
+            console.log(err);
+        }
+    })
+}
+
+exports.getDepByIDDoc = function (id,callbackQuery) {
+    connection.query("Select Department from Doctor where IDDoctor = ?",[id], function (err, results) {
+        if (!err) {
+            callbackQuery(results);
+        } else {
+            console.log(err);
+        }
+    })
+}
+
+//Paitien data
+exports.getPatienInfor = function (id,callbackQuery) {
+    connection.query("Select * from Patient where IDPatient = ?", [id, callbackQuery], function (err, results) {
         if (!err) {
             callbackQuery(results);
         } else {
@@ -66,8 +118,8 @@ exports.createPatient = function ( name, age, email, sex, address, phone, callba
     })
 }
 
-exports.createPatientAcc = function (tk, mk, callbackQuery) {
-    connection.query("Insert into Patientaccounts set IDPatient =?, Password = ?", [tk, mk, callbackQuery], function (err, results) {
+exports.createPatientAcc = function (username, mk, callbackQuery) {
+    connection.query("Insert into PatientAccounts set UserName = ?,  Password = ?", [username, mk, callbackQuery], function (err, results) {
         if (!err) {
             callbackQuery(results);
         } else {
@@ -76,8 +128,28 @@ exports.createPatientAcc = function (tk, mk, callbackQuery) {
     })
 }
 
+exports.checkPatienAccount= function (username, callbackQuery){
+    connection.query("Select * from PatientAccounts where UserName =?", [username], function (err, results){
+        if(!err){
+            callbackQuery(results);
+        }else{
+            console.log(err);
+        }
+    })
+}
+
+exports.getPassByIDPat= function (id, callbackQuery){
+    connection.query("Select Password from PatientAccounts where IDPatien =?", [id], function (err, results){
+        if(!err){
+            callbackQuery(results);
+        }else{
+            console.log(err);
+        }
+    })
+}
+
 exports.getPatienAcc = function (callbackQuery) {
-    connection.query("Select * from Patientaccounts", function (err, results) {
+    connection.query("Select * from PatientAccounts", function (err, results) {
         if(!err) {
             callbackQuery(results);
         }else {
@@ -86,8 +158,19 @@ exports.getPatienAcc = function (callbackQuery) {
     })
 }
 
-exports.sendRequest = function (idPatient, name, phone, time, department, symptom, medical, callbackQuery) {
-    connection.query("INSERT INTO Request set IDPatien = ?, NamePatien = ?, Phone = ?, Time = ?, Department= ?, Symptom=?, MedicalHistory=? ", [idPatient, name, phone, time, department,symptom, medical, callbackQuery], function (err, results) {
+exports.evaluate = function (idRed, idDoc, quality, note, callbackQuery) {
+    connection.query("Insert into Evaluation set IDRequest = ?, IDDoctor = ?, Quality = ?, Note = ?",[idRed, idDoc, quality, note], function (err, results) {
+        if(!err) {
+            callbackQuery(results);
+        }else {
+            console.log(err);
+        }
+    })
+}
+
+//request data
+exports.getAllRequest = function (callbackQuery) {
+    connection.query("SELECT * FROM Request", function (err, results){
         if (!err) {
             callbackQuery(results);
         }else{
@@ -96,8 +179,18 @@ exports.sendRequest = function (idPatient, name, phone, time, department, sympto
     })
 }
 
-exports.getAllRequest = function (callbackQuery) {
-    connection.query("SELECT * FROM Request", function (err, results){
+exports.getAllRequestByDep = function (dep, callbackQuery) {
+    connection.query("SELECT * FROM Request where Department = ? and State = 'Waiting' ",[dep], function (err, results){
+        if (!err) {
+            callbackQuery(results);
+        }else{
+            console.log(err);
+        }
+    })
+}
+
+exports.sendRequest = function (idPatient, name, phone, time, department, symptom, medical, callbackQuery) {
+    connection.query("INSERT INTO `Request`(`IDPatient`, `NamePatient`, `Phone`, `Time`, `Department`, `Symptom`, `MedicalHistory`, `State`) VALUES (?,?,?,?,?,?,?,'Waiting') ", [idPatient, name, phone, time, department,symptom, medical, callbackQuery], function (err, results) {
         if (!err) {
             callbackQuery(results);
         }else{
@@ -116,4 +209,24 @@ exports.acceptRequest = function (id,callbackQuery) {
     })
 }
 
-module.exports=connection;
+exports.changeRequestState = function (id,callbackQuery) {
+    connection.query("UPDATE `Request` SET `State`='Accepted' WHERE id = ?", function (err, results){
+        if (!err) {
+            callbackQuery(results);
+        }else{
+            console.log(err);
+        }
+    })
+}
+
+// getAllPatienInfo: function (id, callback){
+//     return database.query("Select * from Patient where IDPatient = ?", [id], callback);
+// },
+// PatientSendRequest: function (idPa,NamePA,phone,time,dep,sym,meh,state, callback){
+//     return database.query("INSERT INTO `Request`(`IDPatient`, `NamePatient`, `Phone`, `Time`, `Department`, `Symptom`, `MedicalHistory`, `State`) VALUES (?,?,?,?,?,?,?,'Waiting')", [idPa,NamePA,phone,time,dep,sym,meh,state], callback)
+// },
+// DoctorAceptRequest: function (idReq,callback){
+//     return database.query("Select * from Request where IDRequest = ?", [idReq],callback)
+// },docGetAllRequest: function (id,callback){
+//     return doctor.getAllRequestAsDep(id, callback)
+// }

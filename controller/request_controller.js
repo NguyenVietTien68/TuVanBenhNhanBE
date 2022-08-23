@@ -10,8 +10,8 @@ var sendRequest = {
     },
     DoctorAceptRequest: function (idReq,callback){
         return database.query("Select * from Request where IDRequest = ?", [idReq],callback)
-    },docGetAllRequest: function (id,req,res,callback){
-        return doctor.getAllRequestAsDep()
+    },docGetAllRequest: function (id,callback){
+        return doctor.getAllRequestAsDep(id, callback)
     }
 }
 

@@ -22,10 +22,10 @@
             <h2 class="text-center text-danger">Đăng nhập</h2>
             <img src="./img/md_5ace04c26eb4e.jpg" alt="" width="60px" height="60px" style="margin-left: 120px;">
             
-            <form class="needs-validation" action="/login" method="post">
+            <form action="/login" method="get" enctype="multipart/form-data" class="sign-in-form">
                 <div class="form-group was-validated">
                     <label class="form-label" for="email">Email hoặc số điện thoại</label>
-                    <input class="form-control" type="email" id="email" name="id" required>
+                    <input class="form-control" type="text" id="id" name="id" required>
                     <div class="invalid-feedback">
                        Vui lòng nhập email hoặc số điện thoại. 
                     </div>
@@ -39,7 +39,7 @@
                 </div>
                 <div class="register">
                     <span>Chưa có tài khoản ?</span>
-                    <a href="./register.html" style="text-decoration: none;">Đăng ký ngay</a>
+                    <!-- <a href="./register.html" style="text-decoration: none;">Đăng ký ngay</a> -->
                 </div>
          
                 <input class="btn btn-success w-100" type="submit" value="Đăng nhập">

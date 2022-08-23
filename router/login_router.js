@@ -1,32 +1,14 @@
 var express = require('express');
 var router = express.Router();
-database = require('../database')
+const loginController = require("../controller/login_controller")
 
-const loginService = require('../controller/login_controller')
+router.get('/login', loginController.login)
+router.get('/signup', loginController.signup)
 
-router.get('/login/:role?/:id?/:pass?', function (req, res, next) {
-    let role = req.params.role;
-    if (role == 'bs') {
-        loginService.getAllDoctorAccounts(function (err, results) {
-            loginService.compairDocAccount(req.params.id, req.params.pass, results, req, res, function (err) {
-                if (err) {
-                    console.log(err);
-                }
-            })
-        })
-    } else {
-        loginService.getAllPatienAccounts(function (err, results) {
-            loginService.compairPatAccount(req.params.id, req.params.pass, results, req, res, function (err) {
-                if (err) {
-                    console.log(err);
-                }
-            })
-        })
-    }
-})
-
-router.get('/sendrequest', function (req, res, next) {
-    
+router.get('/logout', function(req, res) {
+    res.clearCookie("idDoc")
+    res.clearCookie("idPat")
+    console.log("logged out")
 })
 
 module.exports = router;
