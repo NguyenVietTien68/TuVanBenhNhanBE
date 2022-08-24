@@ -20,3 +20,11 @@ module.exports.acceptRequest = function (req, res) {
         })
     })
 }
+module.exports.testUser = function (req, res) {
+
+    database.getAllDoctor(function (results){
+
+            res.send(results);
+
+    })
+}

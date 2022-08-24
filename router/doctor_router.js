@@ -3,6 +3,7 @@ var router = express.Router();
 const doctorController = require('../controller/doctor_controller')
 
 router.get('/getRequest',doctorController.getRequestByDep)
+router.get('/getDocters',doctorController.testUser)
 
 router.get('/acceptRequest/:idreq', doctorController.acceptRequest)
 

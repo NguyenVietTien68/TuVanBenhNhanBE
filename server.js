@@ -10,6 +10,13 @@ const io = require('socket.io')(http,{
 const cookieParser = require('cookie-parser');
 
 var bodyparser = require('body-parser');
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json());
 app.use(express.static('./views'));
@@ -32,7 +39,9 @@ app.use('/',loginRouter )
 
 app.use('/patient',patientMiddleware.requireAuth,patientRouter)
 
-app.use('/doctor',doctorMiddleware.requireAuth,doctorRouter)
+app.use('/doctor',doctorRouter)
+
+
 
 const users= {}
 io.on('connection', socket => {
@@ -48,9 +57,9 @@ io.on('connection', socket => {
     })
 })
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 http.listen(PORT, () => {
-    console.log('Server is running on port 3000!');
+    console.log('Server is running on port 5000!');
 });
 
 module.exports = io;

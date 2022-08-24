@@ -2,32 +2,36 @@ const bcrypt = require('bcrypt');
 const database = require("../database")
 
 module.exports.login = function (req, res) {
-    let username = req.body.id;
-    let pass = req.body.password;
+    let username = req.query.id;
+    let pass = req.query.password;
     // console.log(username,pass)
-    database.checkDoctorAccount(username, function (results) {
+    database.checkDoctorAccount(username, function(results){
         if (results.length > 0) {
             bcrypt.compare(pass, results[0].Password.toString(), function (err, result) {
                 if(result){
                     res.cookie('idDoc', results[0].IDDoctor);
-                    return res.send({code: 100, message:"Bác sỹ đăng nhập thành công"})
+                    database.getDoctorInfor(results[0].IDDoctor, function(bacsy){
+                        return res.send({code: 100, message:"Bác sỹ đăng nhập thành công",Doctor: bacsy[0]})
+                    })
                 }else{
                     return res.send({code: 400, message:"Tài khoản hoặc mật khẩu không hợp lệ"})
                 }
             });
-        } else {
-            database.checkPatienAccount(username, function (results) {
+        }else{
+            database.checkPatienAccount(username, function(results){
                 if (results.length > 0) {
                     bcrypt.compare(pass, results[0].Password.toString(), function (err, result) {
-                        if (result) {
+                        if(result){
                             res.cookie('idPat', results[0].IDPatient);
-                            return res.send({ code: 101, message: "Bệnh nhân đăng nhập thành công" })
-                        } else {
-                            return res.send({ code: 400, message: "Tài khoản hoặc mật khẩu không hợp lệ" })
+                            database.getPatienInfor(results[0].IDPatient, function(patient){
+                                return res.send({code: 101, message:"Bệnh nhân đăng nhập thành công", Patient: patient[0]})
+                            })
+                        }else{
+                            return res.send({code: 400, message:"Tài khoản hoặc mật khẩu không hợp lệ"})
                         }
                     });
-                } else {
-                    return res.send({ code: 400, message: "Tài khoản hoặc mật khẩu không hợp lệ" })
+                }else {
+                    return res.send({code: 400, message:"Tài khoản hoặc mật khẩu không hợp lệ"})
                 }
             })
         }
@@ -44,23 +48,17 @@ module.exports.signup = function (req, res) {
     let address = req.body.address;
     let phone = req.body.phone;
 
-    database.checkPatienAccount(username, function (acc) {
-        if (acc.length > 0) {
-            return res.send({ code: 202, message: "Username này đã tồn tại" })
-        } else {
-            database.checkPatienAccount(username, function (check) {
-                if (check.length > 0) {
-                    return res.send({ code: 202, message: "Username này đã tồn tại" })
-                } else {
-                    bcrypt.hash(password, saltRounds, function (err, hash) {
-                        let hashpass = hash.toString();
-                        database.createPatient(name, age, email, sex, address, phone, function (result) {
-                            database.createPatientAcc(username, hashpass, function (results) {
-                                return res.send({ code: 200, message: "Đăng ký thành công " })
-                            })
-                        })
+    database.checkPatienAccount(username, function (acc){
+        if(acc.length > 0){
+            return res.send ({ code: 202, message: "Username này đã tồn tại"})
+        }else{
+            bcrypt.hash(password, saltRounds, function (err, hash) {
+                let hashpass = hash.toString();
+                database.createPatient(name, age, email, sex, address, phone, function (result) {
+                    database.createPatientAcc(username, hashpass, function (results){
+                        return res.send({code: 200, message:"Đăng ký thành công "})
                     })
-                }
+                })
             })
         }
     })

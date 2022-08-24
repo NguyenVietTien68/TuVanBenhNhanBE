@@ -27,6 +27,17 @@ exports.getAllDoctor = function (callbackQuery) {
     })
 }
 
+exports.getDoctorInfor = function (id,callbackQuery) {
+    connection.query("Select * from Doctor where IDDoctor = ?",[id], function (err, results) {
+        if (!err) {
+            callbackQuery(results);
+        } else {
+            console.log(err);
+        }
+    })
+}
+
+
 exports.getDoctorPass = function (username, callbackQuery) {
     connection.query("Select Password from DoctorAccounts where UserName = ?",[username], function (err, results) {
         if (!err) {
@@ -92,16 +103,6 @@ exports.getDepByIDDoc = function (id,callbackQuery) {
         if (!err) {
             callbackQuery(results);
         } else {
-            console.log(err);
-        }
-    })
-}
-
-exports.checkDocUsernameAccount= function (username, callbackQuery){
-    connection.query("Select * from Doctoraccounts where UserName =?", [username], function (err, results){
-        if(!err){
-            callbackQuery(results);
-        }else{
             console.log(err);
         }
     })
