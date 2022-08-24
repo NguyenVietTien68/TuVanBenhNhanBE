@@ -8,13 +8,12 @@ module.exports.login = function (req, res) {
     database.checkDoctorAccount(username, function (results) {
         if (results.length > 0) {
             bcrypt.compare(pass, results[0].Password.toString(), function (err, result) {
-                // if(result){
-                //     res.cookie('idDoc', results[0].IDDoctor);
-                //     return res.send({code: 100, message:"Bác sỹ đăng nhập thành công"})
-                // }else{
-                //     return res.send({code: 400, message:"Tài khoản hoặc mật khẩu không hợp lệ"})
-                // }
-                console.log(result)
+                if(result){
+                    res.cookie('idDoc', results[0].IDDoctor);
+                    return res.send({code: 100, message:"Bác sỹ đăng nhập thành công"})
+                }else{
+                    return res.send({code: 400, message:"Tài khoản hoặc mật khẩu không hợp lệ"})
+                }
             });
         } else {
             database.checkPatienAccount(username, function (results) {
