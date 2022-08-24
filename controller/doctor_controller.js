@@ -13,7 +13,7 @@ module.exports.getRequestByDep = function (req, res) {
 }
 
 module.exports.acceptRequest = function (req, res) {
-    let idReq = req.params.id;
+    let idReq = req.params.idreq;
     database.aceptRequest(idReq, function (results){
         database.changeRequestState(idReq, function (result){
             res.send(results);

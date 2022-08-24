@@ -97,6 +97,16 @@ exports.getDepByIDDoc = function (id,callbackQuery) {
     })
 }
 
+exports.checkDocUsernameAccount= function (username, callbackQuery){
+    connection.query("Select * from Doctoraccounts where UserName =?", [username], function (err, results){
+        if(!err){
+            callbackQuery(results);
+        }else{
+            console.log(err);
+        }
+    })
+}
+
 //Paitien data
 exports.getPatienInfor = function (id,callbackQuery) {
     connection.query("Select * from Patient where IDPatient = ?", [id, callbackQuery], function (err, results) {

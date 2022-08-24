@@ -4,7 +4,7 @@ const doctorController = require('../controller/doctor_controller')
 
 router.get('/getRequest',doctorController.getRequestByDep)
 
-router.get('/acceptRequest', doctorController.acceptRequest)
+router.get('/acceptRequest/:idreq', doctorController.acceptRequest)
 
 router.get('/logout', function(req, res) {
     res.clearCookie("idDoc")
