@@ -210,6 +210,16 @@ exports.sendRequest = function (idPatient, name, phone, time, department, sympto
     })
 }
 
+exports.sendGuestRequest = function (idPatient, name, phone, time, department, symptom, medical, callbackQuery) {
+    connection.query("INSERT INTO `Request`(`NamePatient`, `Phone`, `Time`, `Department`, `Symptom`, `MedicalHistory`, `State`) VALUES (?,?,?,?,?,?,?,'Waiting') ", [idPatient, name, phone, time, department,symptom, medical, callbackQuery], function (err, results) {
+        if (!err) {
+            callbackQuery(results);
+        }else{
+            console.log(err);
+        }
+    })
+}
+
 exports.acceptRequest = function (id,callbackQuery) {
     connection.query("SELECT * FROM Request where id = ?", function (err, results){
         if (!err) {
