@@ -120,7 +120,7 @@ exports.getPatienInfor = function (id,callbackQuery) {
 }
 
 exports.createPatient = function ( name, age, email, sex, address, phone, callbackQuery) {
-    connection.query("Insert into Patient set NamePatien =?, Age = ?, Email=?, Sex = ?, Address = ?, Phone = ?", [name, age, email, sex, address, phone, callbackQuery], function (err, results) {
+    connection.query("Insert into Patient set NamePatient =?, Age = ?, Email=?, Sex = ?, Address = ?, Phone = ?", [name, age, email, sex, address, phone, callbackQuery], function (err, results) {
         if (!err) {
             callbackQuery(results);
         } else {

@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
 
 app.use('/',loginRouter )
 
-app.use('/patient',patientMiddleware.requireAuth,patientRouter)
+app.use('/patient',patientRouter)
 
 app.use('/doctor',doctorRouter)
 

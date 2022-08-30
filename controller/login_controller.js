@@ -1,9 +1,10 @@
 const bcrypt = require('bcrypt');
 const database = require("../database")
+const saltRounds = 10;
 
 module.exports.login = function (req, res) {
-    let username = req.query.id;
-    let pass = req.query.password;
+    let username = req.body.id;
+    let pass = req.body.password;
     // console.log(username,pass)
     database.checkDoctorAccount(username, function(results){
         if (results.length > 0) {
@@ -52,8 +53,9 @@ module.exports.signup = function (req, res) {
         if(acc.length > 0){
             return res.send ({ code: 202, message: "Username này đã tồn tại"})
         }else{
-            bcrypt.hash(password, saltRounds, function (err, hash) {
+             bcrypt.hash(password, saltRounds, function (err, hash) {
                 let hashpass = hash.toString();
+                // console.log(hash)
                 database.createPatient(name, age, email, sex, address, phone, function (result) {
                     database.createPatientAcc(username, hashpass, function (results){
                         return res.send({code: 200, message:"Đăng ký thành công "})

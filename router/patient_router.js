@@ -4,7 +4,7 @@ database = require('../database')
 
 const patientController = require('../controller/patient_controller')
 
-router.get('/sendRequest',patientController.sendRequest);
+router.post('/sendRequest',patientController.sendRequest);
 router.get('/sendEvaluation', patientController.evaluate)
 
 router.get('/logout', function(req, res) {
