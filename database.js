@@ -110,7 +110,7 @@ exports.getDepByIDDoc = function (id,callbackQuery) {
 
 //Paitien data
 exports.getPatienInfor = function (id,callbackQuery) {
-    connection.query("Select * from Patient where IDPatient = ?", [id, callbackQuery], function (err, results) {
+    connection.query("Select * from Patient where IDPatient = ?", [id], function (err, results) {
         if (!err) {
             callbackQuery(results);
         } else {
@@ -211,7 +211,7 @@ exports.sendRequest = function (idPatient, name, phone, time, department, sympto
 }
 
 exports.sendGuestRequest = function (idPatient, name, phone, time, department, symptom, medical, callbackQuery) {
-    connection.query("INSERT INTO `Request`(`NamePatient`, `Phone`, `Time`, `Department`, `Symptom`, `MedicalHistory`, `State`) VALUES (?,?,?,?,?,?,?,'Waiting') ", [idPatient, name, phone, time, department,symptom, medical, callbackQuery], function (err, results) {
+    connection.query("INSERT INTO `Request`(`IDPatient`, `NamePatient`, `Phone`, `Time`, `Department`, `Symptom`, `MedicalHistory`, `State`) VALUES (?,?,?,?,?,?,?,'Waiting') ", [idPatient, name, phone, time, department,symptom, medical, callbackQuery], function (err, results) {
         if (!err) {
             callbackQuery(results);
         }else{

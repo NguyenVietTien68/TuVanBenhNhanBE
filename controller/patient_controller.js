@@ -16,7 +16,8 @@ module.exports.sendRequest = function (req, res) {
     let medicalHistory = req.body.medicalHistory;
     let department = req.body.department;
     let state = "Waiting"
-
+    
+    // console.log(id)
     if (idPatient != null) {
         database.sendRequest(idPatient, name, phone, time, department, symptom, medicalHistory, function (result) {
             res.send({ code: 200, message: "Gửi request thành công" })
@@ -39,5 +40,16 @@ module.exports.evaluate = function (req, res) {
 
     database.evaluate(idReq, idDoc, quality, note, function (result) {
         return res.send({ code: 200, message: "Đánh giá hành công yêu cầu " + idReq + " của bác sỹ " + idDoc })
+    })
+}
+
+module.exports.getPaitientByID = function (req, res) {
+    let idPat = req.params.idPat;
+
+    // database.getPa(idReq, function (result) {
+    //     return res.send({ code: 200, message: "Đánh giá hành công yêu cầu " + idReq + " của bác sỹ " + idDoc })
+    // })
+    database.getPatienInfor(idPat, function(results){
+        res.send(results)
     })
 }

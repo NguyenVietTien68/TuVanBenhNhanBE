@@ -1,6 +1,7 @@
 module.exports.getRequestByDep = function (req, res) {
-    const { cookies } = req;
-    var idDoc = cookies.idDoc;
+    // const { cookies } = req;
+    var idDoc = req.query.idDoc;
+
     database.getDepByIDDoc(idDoc, function ( results){
         if(results.length > 0){
             // console.log(results);
@@ -26,5 +27,12 @@ module.exports.testUser = function (req, res) {
 
             res.send(results);
 
+    })
+}
+
+module.exports.getDoctorByID = function(req, res){
+    let idDoc = req.params.idDoc;
+    database.getDoctorInfor(idDoc,function(results){
+        res.send(results);
     })
 }
